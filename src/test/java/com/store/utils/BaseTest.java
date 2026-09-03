@@ -1,5 +1,12 @@
 package com.store.utils;
 
+import com.store.pages.CartPage;
+import com.store.pages.CheckoutPage;
+import com.store.pages.HomePage;
+import com.store.pages.LoginPage;
+import com.store.pages.PasswordRecoveryPage;
+import com.store.pages.ProductPage;
+import com.store.pages.RegisterPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -12,6 +19,13 @@ public class BaseTest {
     public WebDriver driver;
     protected static final int TIME_OUT = 10;
     protected static final String BASE_URL = "https://demo.nopcommerce.com";
+    protected HomePage homePage;
+    protected RegisterPage registerPage;
+    protected LoginPage loginPage;
+    protected PasswordRecoveryPage passwordRecoveryPage;
+    protected ProductPage productPage;
+    protected CartPage cartPage;
+    protected CheckoutPage checkoutPage;
 
     @BeforeMethod
     public void setup()  {
@@ -21,6 +35,13 @@ public class BaseTest {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(TIME_OUT));
         driver.get(BASE_URL);
+        homePage = new HomePage(driver);
+        registerPage = new RegisterPage(driver);
+        loginPage = new LoginPage(driver);
+        passwordRecoveryPage = new PasswordRecoveryPage(driver);
+        productPage = new ProductPage(driver);
+        cartPage = new CartPage(driver);
+        checkoutPage = new CheckoutPage(driver);
     }
 
     @AfterMethod
