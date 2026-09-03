@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Trabajo Final nopCommerce Suite">
+
+    <listeners>
+        <listener class-name="com.store.listeners.TestListener"></listener>
+    </listeners>
+
+    <!-- Las clases y los grupos de los 15 casos se agregarán durante la implementación. -->
+</suite>
