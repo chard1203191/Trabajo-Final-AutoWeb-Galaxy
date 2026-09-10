@@ -6,5 +6,18 @@
         <listener class-name="com.store.listeners.TestListener"></listener>
     </listeners>
 
-    <!-- Las clases y los grupos de los 15 casos se agregarán durante la implementación. -->
+    <test name="nopCommerce Tests">
+        <groups>
+            <run>
+                <include name="functional"/>
+                <include name="regression"/>
+                <include name="integration"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.store.tests.RegisterTest"/>
+            <class name="com.store.tests.LoginTest"/>
+            <class name="com.store.tests.OrderTest"/>
+        </classes>
+    </test>
 </suite>
