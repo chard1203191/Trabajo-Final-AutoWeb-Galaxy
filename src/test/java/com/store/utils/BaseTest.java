@@ -27,7 +27,7 @@ public class BaseTest {
     protected CartPage cartPage;
     protected CheckoutPage checkoutPage;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setup()  {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--headless=new");
@@ -44,7 +44,7 @@ public class BaseTest {
         checkoutPage = new CheckoutPage(driver);
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void tearDown() {
         if (driver != null) {
             driver.manage().deleteAllCookies();
