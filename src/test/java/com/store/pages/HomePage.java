@@ -5,13 +5,14 @@ import org.openqa.selenium.WebDriver;
 
 public class HomePage extends BasePage {
 
-    private By registerLink = By.className("ico-register");
-    private By loginLink = By.className("ico-login");
-    private By logoutLink = By.className("ico-logout");
-    private By accountLink = By.className("ico-account");
-    private By cartLink = By.id("topcartlink");
-    private By searchInput = By.id("small-searchterms");
-    private By searchButton = By.cssSelector("button.search-box-button");
+    private By registerLink = By.linkText("Create an Account");
+    private By loginLink = By.linkText("Sign In");
+    private By customerMenuButton = By.cssSelector(".customer-welcome button.action.switch");
+    private By logoutLink = By.linkText("Sign Out");
+    private By accountLink = By.cssSelector(".customer-welcome .logged-in");
+    private By cartLink = By.cssSelector("a.action.showcart");
+    private By searchInput = By.id("search");
+    private By searchButton = By.cssSelector("button.action.search");
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -35,6 +36,9 @@ public class HomePage extends BasePage {
     }
 
     public void logout() {
+        if (isDisplayedElement(customerMenuButton)) {
+            click(customerMenuButton);
+        }
         click(logoutLink);
     }
 

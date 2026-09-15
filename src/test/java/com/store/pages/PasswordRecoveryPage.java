@@ -5,10 +5,10 @@ import org.openqa.selenium.WebDriver;
 
 public class PasswordRecoveryPage extends BasePage {
 
-    private By emailInput = By.id("Email");
-    private By recoveryButton = By.cssSelector("button.password-recovery-button");
-    private By resultMessage = By.className("result");
-    private By emailError = By.id("Email-error");
+    private By emailInput = By.id("email_address");
+    private By recoveryButton = By.id("send2");
+    private By resultMessage = By.cssSelector(".message-success div");
+    private By emailError = By.id("email_address-error");
 
     public PasswordRecoveryPage(WebDriver driver) {
         super(driver);
