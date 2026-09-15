@@ -17,8 +17,8 @@ import java.time.Duration;
 public class BaseTest {
 
     public WebDriver driver;
-    protected static final int TIME_OUT = 10;
-    protected static final String BASE_URL = "https://demo.nopcommerce.com";
+    protected static final int TIME_OUT = 20;
+    protected static final String BASE_URL = "http://localhost:8081";
     protected HomePage homePage;
     protected RegisterPage registerPage;
     protected LoginPage loginPage;
@@ -30,7 +30,6 @@ public class BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void setup()  {
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--headless=new");
         driver = new ChromeDriver(chromeOptions);
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(TIME_OUT));
