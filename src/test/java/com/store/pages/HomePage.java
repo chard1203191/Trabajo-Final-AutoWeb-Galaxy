@@ -9,7 +9,7 @@ public class HomePage extends BasePage {
     private By loginLink = By.linkText("Sign In");
     private By customerMenuButton = By.cssSelector(".customer-welcome button.action.switch");
     private By logoutLink = By.linkText("Sign Out");
-    private By accountLink = By.cssSelector(".customer-welcome .logged-in");
+    private By accountLink = By.cssSelector(".panel.header .logged-in");
     private By cartLink = By.cssSelector("a.action.showcart");
     private By searchInput = By.id("search");
     private By searchButton = By.cssSelector("button.action.search");

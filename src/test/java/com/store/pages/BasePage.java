@@ -35,7 +35,7 @@ public abstract class BasePage {
     }
 
     public void click(By element) {
-        find(element).click();
+        wait.until(ExpectedConditions.elementToBeClickable(element)).click();
     }
 
     public void submit(By element) {

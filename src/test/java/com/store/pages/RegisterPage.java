@@ -10,7 +10,8 @@ public class RegisterPage extends BasePage {
     private By emailInput = By.id("email_address");
     private By passwordInput = By.id("password");
     private By confirmPasswordInput = By.id("password-confirmation");
-    private By registerButton = By.id("send2");
+    private By registerButton =
+            By.cssSelector("form#form-validate button#send2.action.submit.primary");
     private By resultMessage = By.cssSelector(".message-success div");
     private By firstNameError = By.id("firstname-error");
     private By lastNameError = By.id("lastname-error");
