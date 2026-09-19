@@ -10,7 +10,7 @@ public class OrderTest extends BaseTest {
     public void tcOrder01AnadirProductosAlCarrito() {
         String email = "orden.carrito." + System.currentTimeMillis() + "@test.com";
         String password = "Password123";
-        String productName = "Apple MacBook Pro 13-inch";
+        String productName = "Apple AirPods Pro 2";
 
         registrarUsuario(email, password);
         agregarProducto(productName);
@@ -23,71 +23,95 @@ public class OrderTest extends BaseTest {
     public void tcOrder02EliminarProductosDelCarrito() {
         String email = "orden.eliminar." + System.currentTimeMillis() + "@test.com";
         String password = "Password123";
-        String productName = "Apple MacBook Pro 13-inch";
+        String productName = "Apple AirPods Pro 2";
 
         registrarUsuario(email, password);
         agregarProducto(productName);
-        homePage.goToCart();
-        cartPage.removeProduct(productName);
+        homePage.openMiniCart();
+        Assert.assertTrue(cartPage.isProductInMiniCart(productName));
+        cartPage.removeProductFromMiniCart(productName);
+        Assert.assertEquals(cartPage.getRemoveConfirmationMessage(),
+                "Are you sure you would like to remove this item from the shopping cart?");
+        cartPage.confirmProductRemoval();
 
-        Assert.assertTrue(cartPage.getEmptyCartMessage().contains("Your Shopping Cart is empty"));
+        Assert.assertEquals(cartPage.getEmptyMiniCartMessage(), "You have no items in your shopping cart.");
     }
 
     @Test(groups = {"functional", "integration"})
     public void tcOrder03ModificarCantidadDeProductosEnElCarrito() {
         String email = "orden.cantidad." + System.currentTimeMillis() + "@test.com";
         String password = "Password123";
-        String productName = "Apple MacBook Pro 13-inch";
-        String quantity = "2";
+        String productName = "Apple AirPods Pro 2";
+        String quantity = "3";
 
         registrarUsuario(email, password);
         agregarProducto(productName);
         homePage.goToCart();
+        Assert.assertTrue(cartPage.isProductInCart(productName));
         cartPage.changeProductQuantity(productName, quantity);
 
         Assert.assertEquals(cartPage.getProductQuantity(productName), quantity);
+        Assert.assertEquals(cartPage.getProductSubtotal(productName, "$749.97"), "$749.97");
     }
 
     @Test(groups = {"regression"})
     public void tcOrder04CreacionDeOrdenExitosaConTresProductosDiferentes() {
         String email = "orden.exitosa." + System.currentTimeMillis() + "@test.com";
         String password = "Password123";
-        String firstProduct = "Apple MacBook Pro 13-inch";
-        String secondProduct = "HTC One M8 Android L 5.0 Lollipop";
-        String thirdProduct = "Leica T Mirrorless Digital Camera";
+        String firstProduct = "Apple AirPods Pro 2";
+        String firstProductSlug = "airpods-pro-2";
+        String secondProduct = "Adidas Ultraboost Running Shoes";
+        String secondProductSlug = "ultraboost-running";
+        String thirdProduct = "Ray-Ban Wayfarer Sunglasses";
+        String thirdProductSlug = "rayban-wayfarer";
 
         registrarUsuario(email, password);
         agregarProducto(firstProduct);
-        agregarProducto(secondProduct);
-        agregarProducto(thirdProduct);
+        agregarProducto(secondProduct, secondProductSlug);
+        agregarProducto(thirdProduct, thirdProductSlug);
         homePage.goToCart();
-        cartPage.acceptTermsOfService();
+        Assert.assertTrue(cartPage.isProductInCart(firstProduct, firstProductSlug));
+        Assert.assertTrue(cartPage.isProductInCart(secondProduct, secondProductSlug));
+        Assert.assertTrue(cartPage.isProductInCart(thirdProduct, thirdProductSlug));
         cartPage.startCheckout();
-        checkoutPage.fillBillingAddress("Richard", "Saucedo", email, "Peru", "Lima",
-                "Av. Principal 123", "15001", "999999999");
-        checkoutPage.continueBillingAddress();
-        checkoutPage.selectFirstShippingMethod();
-        checkoutPage.continueShippingMethod();
-        checkoutPage.selectFirstPaymentMethod();
-        checkoutPage.continuePaymentMethod();
-        checkoutPage.continuePaymentInfo();
-        checkoutPage.confirmOrder();
+        checkoutPage.fillShippingAddress("Richard", "Test", "Av. Javier Prado 123", "PE",
+                "1007", "Lima", "15036", "999999999");
+        checkoutPage.selectShippingMethod();
+        checkoutPage.continueToPayment();
+        checkoutPage.waitForPaymentStep();
 
-        Assert.assertTrue(checkoutPage.getOrderCompletedMessage().contains("Your order has been successfully processed"));
-        Assert.assertTrue(checkoutPage.getOrderNumber().contains("Order number"));
+        Assert.assertEquals(checkoutPage.getPaymentMethodValue(), "checkmo");
+        Assert.assertTrue(checkoutPage.isCheckMoneyOrderSelected());
+        Assert.assertEquals(checkoutPage.getPaymentMethodLabel(), "Check / Money order");
+        Assert.assertEquals(checkoutPage.getSubtotal("$619.97"), "$619.97");
+        Assert.assertEquals(checkoutPage.getShippingTotal("$15.00"), "$15.00");
+        Assert.assertEquals(checkoutPage.getGrandTotal("$634.97"), "$634.97");
+        checkoutPage.placeOrder();
+
+        Assert.assertEquals(checkoutPage.getOrderCompletedMessage("Thank you for your purchase!"),
+                "Thank you for your purchase!");
+        Assert.assertFalse(checkoutPage.getOrderNumber().isEmpty());
     }
 
     private void registrarUsuario(String email, String password) {
         homePage.goToRegister();
         registerPage.registerUser("Richard", "Saucedo", email, password, password);
-        Assert.assertEquals(registerPage.getSuccessMessage(), "Your registration completed");
+        Assert.assertEquals(registerPage.getSuccessMessage(), "Thank you for registering with Main Website Store.");
     }
 
     private void agregarProducto(String productName) {
         homePage.searchProduct(productName);
         productPage.openProduct(productName);
         productPage.addProductFromDetails();
-        Assert.assertTrue(productPage.getSuccessNotification().contains("The product has been added"));
-        productPage.closeNotification();
+        Assert.assertEquals(productPage.getSuccessNotification(),
+                "You added " + productName + " to your shopping cart.");
+    }
+
+    private void agregarProducto(String productName, String productSlug) {
+        homePage.searchProduct(productName);
+        productPage.openProduct(productName, productSlug);
+        productPage.addProductFromDetails();
+        Assert.assertEquals(productPage.getSuccessNotification(),
+                "You added " + productName + " to your shopping cart.");
     }
 }

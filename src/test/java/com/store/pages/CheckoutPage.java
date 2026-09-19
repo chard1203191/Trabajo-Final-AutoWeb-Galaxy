@@ -2,73 +2,94 @@ package com.store.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
 public class CheckoutPage extends BasePage {
 
-    private By billingFirstNameInput = By.id("BillingNewAddress_FirstName");
-    private By billingLastNameInput = By.id("BillingNewAddress_LastName");
-    private By billingEmailInput = By.id("BillingNewAddress_Email");
-    private By billingCountrySelect = By.id("BillingNewAddress_CountryId");
-    private By billingCityInput = By.id("BillingNewAddress_City");
-    private By billingAddressInput = By.id("BillingNewAddress_Address1");
-    private By billingZipCodeInput = By.id("BillingNewAddress_ZipPostalCode");
-    private By billingPhoneInput = By.id("BillingNewAddress_PhoneNumber");
-    private By billingAddressNextButton = By.id("billingaddress-next-button");
-    private By shippingMethodOption = By.cssSelector("input[name='shippingoption']");
-    private By shippingMethodNextButton = By.cssSelector("button.shipping-method-next-step-button");
-    private By paymentMethodOption = By.cssSelector("input[name='paymentmethod']");
-    private By paymentMethodNextButton = By.cssSelector("button.payment-method-next-step-button");
-    private By paymentInfoNextButton = By.cssSelector("button.payment-info-next-step-button");
-    private By confirmOrderButton = By.cssSelector("button.confirm-order-next-step-button");
-    private By orderCompletedMessage = By.cssSelector(".order-completed");
-    private By orderNumber = By.cssSelector(".order-number");
+    private By firstNameInput = By.name("firstname");
+    private By lastNameInput = By.name("lastname");
+    private By streetAddressInput = By.name("street[0]");
+    private By countrySelect = By.name("country_id");
+    private By regionSelect = By.name("region_id");
+    private By cityInput = By.name("city");
+    private By postcodeInput = By.name("postcode");
+    private By telephoneInput = By.name("telephone");
+    private By shippingMethodOption = By.cssSelector("input[type='radio'][value='flatrate_flatrate']");
+    private By nextButton = By.cssSelector("button.continue");
+    private By paymentStep = By.id("checkout-step-payment");
+    private By checkMoneyOrderOption = By.id("checkmo");
+    private By checkMoneyOrderLabel = By.cssSelector("label[for='checkmo']");
+    private By subtotal = By.cssSelector(".opc-block-summary tr.totals.sub .price");
+    private By shippingTotal = By.cssSelector(".opc-block-summary tr.totals.shipping .price");
+    private By grandTotal = By.cssSelector(".opc-block-summary tr.grand.totals .price");
+    private By placeOrderButton = By.cssSelector("button.action.primary.checkout[title='Place Order']");
+    private By orderCompletedMessage = By.cssSelector("h1.page-title span");
+    private By orderNumber = By.cssSelector(".checkout-success a.order-number");
 
     public CheckoutPage(WebDriver driver) {
         super(driver);
     }
 
-    public void fillBillingAddress(String firstName, String lastName, String email, String country, String city,
-                                   String address, String zipCode, String phone) {
-        type(billingFirstNameInput, firstName);
-        type(billingLastNameInput, lastName);
-        type(billingEmailInput, email);
-        selectCountry(country);
-        type(billingCityInput, city);
-        type(billingAddressInput, address);
-        type(billingZipCodeInput, zipCode);
-        type(billingPhoneInput, phone);
+    public void fillShippingAddress(String firstName, String lastName, String streetAddress, String country,
+                                    String region, String city, String postcode, String telephone) {
+        type(firstNameInput, firstName);
+        type(lastNameInput, lastName);
+        type(streetAddressInput, streetAddress);
+        selectByValue(countrySelect, country);
+        selectByValue(regionSelect, region);
+        type(cityInput, city);
+        type(postcodeInput, postcode);
+        type(telephoneInput, telephone);
     }
 
-    public void continueBillingAddress() {
-        click(billingAddressNextButton);
-    }
-
-    public void selectFirstShippingMethod() {
+    public void selectShippingMethod() {
         click(shippingMethodOption);
     }
 
-    public void continueShippingMethod() {
-        click(shippingMethodNextButton);
+    public void continueToPayment() {
+        click(nextButton);
     }
 
-    public void selectFirstPaymentMethod() {
-        click(paymentMethodOption);
+    public void waitForPaymentStep() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(paymentStep));
     }
 
-    public void continuePaymentMethod() {
-        click(paymentMethodNextButton);
+    public String getPaymentMethodValue() {
+        wait.until(ExpectedConditions.presenceOfElementLocated(checkMoneyOrderOption));
+        return find(checkMoneyOrderOption).getAttribute("value");
     }
 
-    public void continuePaymentInfo() {
-        click(paymentInfoNextButton);
+    public boolean isCheckMoneyOrderSelected() {
+        wait.until(ExpectedConditions.presenceOfElementLocated(checkMoneyOrderOption));
+        return find(checkMoneyOrderOption).isSelected();
     }
 
-    public void confirmOrder() {
-        click(confirmOrderButton);
+    public String getPaymentMethodLabel() {
+        return text(checkMoneyOrderLabel);
     }
 
-    public String getOrderCompletedMessage() {
+    public String getSubtotal(String expectedSubtotal) {
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(subtotal, expectedSubtotal));
+        return text(subtotal);
+    }
+
+    public String getShippingTotal(String expectedShipping) {
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(shippingTotal, expectedShipping));
+        return text(shippingTotal);
+    }
+
+    public String getGrandTotal(String expectedTotal) {
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(grandTotal, expectedTotal));
+        return text(grandTotal);
+    }
+
+    public void placeOrder() {
+        click(placeOrderButton);
+    }
+
+    public String getOrderCompletedMessage(String expectedMessage) {
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(orderCompletedMessage, expectedMessage));
         return text(orderCompletedMessage);
     }
 
@@ -76,8 +97,8 @@ public class CheckoutPage extends BasePage {
         return text(orderNumber);
     }
 
-    private void selectCountry(String country) {
-        Select countrySelect = new Select(find(billingCountrySelect));
-        countrySelect.selectByVisibleText(country);
+    private void selectByValue(By locator, String value) {
+        Select select = new Select(find(locator));
+        select.selectByValue(value);
     }
 }

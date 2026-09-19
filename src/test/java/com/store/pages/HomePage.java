@@ -11,6 +11,7 @@ public class HomePage extends BasePage {
     private By logoutLink = By.linkText("Sign Out");
     private By accountLink = By.cssSelector(".panel.header .logged-in");
     private By cartLink = By.cssSelector("a.action.showcart");
+    private By viewCartLink = By.cssSelector("a.action.viewcart");
     private By searchInput = By.id("search");
     private By searchButton = By.cssSelector("button.action.search");
 
@@ -27,6 +28,11 @@ public class HomePage extends BasePage {
     }
 
     public void goToCart() {
+        click(cartLink);
+        click(viewCartLink);
+    }
+
+    public void openMiniCart() {
         click(cartLink);
     }
 

@@ -6,9 +6,9 @@ import org.openqa.selenium.WebElement;
 
 public class ProductPage extends BasePage {
 
-    private By quantityInput = By.cssSelector("input.qty-input[id^='product_enteredQuantity_']");
-    private By addToCartButton = By.cssSelector("button.add-to-cart-button[id^='add-to-cart-button-']");
-    private By successNotification = By.cssSelector(".bar-notification.success");
+    private By quantityInput = By.id("qty");
+    private By addToCartButton = By.id("product-addtocart-button");
+    private By successNotification = By.cssSelector(".page.messages .message-success div");
     private By closeNotificationButton = By.cssSelector(".bar-notification.success .close");
 
     public ProductPage(WebDriver driver) {
@@ -17,6 +17,10 @@ public class ProductPage extends BasePage {
 
     public void openProduct(String productName) {
         click(productLinkByName(productName));
+    }
+
+    public void openProduct(String productName, String productSlug) {
+        click(productLinkBySlug(productSlug));
     }
 
     public void addProductFromDetails() {
@@ -42,11 +46,28 @@ public class ProductPage extends BasePage {
     }
 
     private By productLinkByName(String productName) {
-        return By.xpath("//h2[contains(@class,'product-title')]/a[normalize-space()='" + productName + "']");
+        return By.cssSelector("a.product-item-link[href*='" + productSlug(productName) + ".html']");
+    }
+
+    private By productLinkBySlug(String productSlug) {
+        return By.cssSelector("a.product-item-link[href$='" + productSlug + ".html']");
     }
 
     private By productItemByName(String productName) {
         return By.xpath("//div[contains(@class,'product-item')][.//h2[contains(@class,'product-title')]/a[normalize-space()='"
                 + productName + "']]");
+    }
+
+    private String productSlug(String productName) {
+        if ("Apple AirPods Pro 2".equals(productName)) {
+            return "airpods-pro-2";
+        }
+        if ("Adidas Ultraboost".equals(productName)) {
+            return "ultraboost-running";
+        }
+        if ("Ray-Ban Wayfarer".equals(productName)) {
+            return "rayban-wayfarer";
+        }
+        return productName.toLowerCase().replaceAll("[^a-z0-9]+", "-").replaceAll("(^-|-$)", "");
     }
 }
