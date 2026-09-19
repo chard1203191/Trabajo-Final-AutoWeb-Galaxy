@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 public class PasswordRecoveryPage extends BasePage {
 
     private By emailInput = By.id("email_address");
-    private By recoveryButton = By.id("send2");
+    private By recoveryButton = By.cssSelector("form#form-validate button#send2.action.submit.primary");
     private By resultMessage = By.cssSelector(".message-success div");
     private By emailError = By.id("email_address-error");
 
