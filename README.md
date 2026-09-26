@@ -8,7 +8,9 @@ Proyecto de automatización web desarrollado como trabajo final del curso **Sele
 
 ## Aplicación bajo prueba
 
-[nopCommerce Demo](https://demo.nopcommerce.com)
+[Magento Testing Playground](https://github.com/lruizajax/magento-testing-playground)
+
+El entorno se ejecuta mediante Docker Compose y queda disponible en `http://localhost:8081`.
 
 ## Alcance
 
