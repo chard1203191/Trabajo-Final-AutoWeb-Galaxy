@@ -17,6 +17,8 @@ jobs:
           repository: lruizajax/magento-testing-playground
           ref: master
           path: magento-environment
+          token: ${{ secrets.MAGENTO_REPO_TOKEN }}
+          persist-credentials: false
 
       - name: Set up Java 21
         uses: actions/setup-java@v5
